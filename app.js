@@ -1,5 +1,5 @@
 const PLAYER_TURN = 'x';
-const AI_TURN = 'circle';
+const COMPUTER_TURN = 'circle';
 const Winning_Combinations = [
     [0, 1, 2],
     [3, 4, 5],
@@ -31,7 +31,7 @@ function startGame() {
     circleTurn = false;
     cellElements.forEach((cell) => {
         cell.classList.remove(PLAYER_TURN);
-        cell.classList.remove(AI_TURN);
+        cell.classList.remove(COMPUTER_TURN);
         cell.removeEventListener('click', handleClick);
         cell.addEventListener('click', handleClick, { once: true });
     });
@@ -39,16 +39,17 @@ function startGame() {
     winningMessageElement.classList.remove('show');
 }
 
+AiTurn();
+
 function handleClick(e) {
     const cell = e.target;
-    const currentClass = circleTurn ? AI_TURN : PLAYER_TURN;
+    const currentClass = circleTurn ? COMPUTER_TURN : PLAYER_TURN;
     placeMark(cell, currentClass);
     if (checkWin(currentClass)) {
         endGame(false);
     } else if (isDraw()) {
         endGame(true);
     } else {
-        // AiTurn();
         switchTurn();
         setBoardHoverClass();
     }
@@ -69,7 +70,7 @@ function isDraw() {
     return [...cellElements].every((cell) => {
         return (
             cell.classList.contains(PLAYER_TURN) ||
-            cell.classList.contains(AI_TURN)
+            cell.classList.contains(COMPUTER_TURN)
         );
     });
 }
@@ -83,10 +84,10 @@ function switchTurn() {
 }
 
 function setBoardHoverClass() {
-    board.classList.remove(AI_TURN);
+    board.classList.remove(COMPUTER_TURN);
     board.classList.remove(PLAYER_TURN);
     if (circleTurn) {
-        board.classList.add(AI_TURN);
+        board.classList.add(COMPUTER_TURN);
     } else {
         board.classList.add(PLAYER_TURN);
     }
@@ -107,11 +108,10 @@ function randomNumber() {
 function AiTurn() {
     let random = randomNumber();
     for (let cell of cellElements) {
-        if (cell.contains(PLAYER_TURN) || cell.contains(AI_TURN)) {
+        if (cell.contains(PLAYER_TURN) || cell.contains(COMPUTER_TURN)) {
             continue;
         } else {
-            placeMark(random);
+            placeMark();
         }
     }
-    return switchTurn();
 }
